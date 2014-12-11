@@ -43,3 +43,7 @@
 	.position-style-2 button.one-page-up {top:10px; right:10px;}
 	.position-style-2 button.all-the-way-to-top {top:10px; right:80px;}
 
+/* Position style 2: UP and DOWN at bottom middle */
+	.position-style-3 button.one-page-down {bottom:10px; left:50%; margin-left:5px;}
+	.position-style-3 button.one-page-up {bottom:10px; left:50%; margin-left:-50px;}
+	.position-style-3 button.all-the-way-to-top {bottom:10px; right:10px;}

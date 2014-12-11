@@ -5,7 +5,7 @@ Plugin URI: http://www.senff.com/plugins/smooth-page-scroll-up-down-buttons
 Description: Adds buttons to your page that will enable the user to easily (and smoothly) scroll one screen up/down.
 Author: Mark Senff
 Author URI: http://www.senff.com
-Version: 1.0
+Version: 1.1
 */
 
 defined('ABSPATH') or die('F*ck cancer.');
@@ -15,7 +15,7 @@ defined('ABSPATH') or die('F*ck cancer.');
 
 if (!function_exists('page_scroll_buttons_default_options')) {
 	function page_scroll_buttons_default_options() {
-		$versionNum = '1.0';
+		$versionNum = '1.1';
 		if (get_option('page_scroll_buttons_options') === false) {
 			$new_options['psb_version'] = $versionNum;
 			$new_options['psb_positioning'] = '0';
@@ -157,6 +157,7 @@ if (!function_exists('page_scroll_up_down_buttons_config_page')) {
 									<div class="positioning-option"><input type="radio" id="psb_positioning_0" name="psb_positioning" value="0" <?php if ($page_scroll_buttons_options['psb_positioning'] == 0) {echo 'checked';} ?>><label id="pos-0" for="psb_positioning_0"></label></div>
 									<div class="positioning-option"><input type="radio" id="psb_positioning_1" name="psb_positioning" value="1" <?php if ($page_scroll_buttons_options['psb_positioning'] == 1) {echo 'checked';} ?>><label id="pos-1" for="psb_positioning_1"></label></div>
 									<div class="positioning-option"><input type="radio" id="psb_positioning_2" name="psb_positioning" value="2" <?php if ($page_scroll_buttons_options['psb_positioning'] == 2) {echo 'checked';} ?>><label id="pos-2" for="psb_positioning_2"></label></div>
+									<div class="positioning-option"><input type="radio" id="psb_positioning_3" name="psb_positioning" value="3" <?php if ($page_scroll_buttons_options['psb_positioning'] == 3) {echo 'checked';} ?>><label id="pos-3" for="psb_positioning_3"></label></div>
 							</td>
 							</tr>
 
@@ -180,7 +181,7 @@ if (!function_exists('page_scroll_up_down_buttons_config_page')) {
 
 		<hr />
 
-		<p><a href="http://www.senff.com/plugins/smooth-page-scroll-up-down-buttons" target="_blank">Smooth Page Scroll Up/Down Buttons</a> version 1.0 by <a href="http://www.senff.com" target="_blank">Senff</a> &nbsp;/&nbsp; <a href="https://wordpress.org/support/plugin/smooth-page-scroll-updown-buttons" target="_blank">Please Report Bugs</a> &nbsp;/&nbsp; Follow on Twitter: <a href="http://www.twitter.com/senff" target="_blank">@Senff</a> &nbsp;/&nbsp; <a href="http://www.senff.com/plugins/smooth-page-scroll-up-down-buttons" target="_blank">Detailed documentation</a> &nbsp;/&nbsp; <a href="http://www.cancer.ca" target="_blank">Donate</a></p>
+		<p><a href="http://www.senff.com/plugins/smooth-page-scroll-up-down-buttons" target="_blank">Smooth Page Scroll Up/Down Buttons</a> version 1.1 by <a href="http://www.senff.com" target="_blank">Senff</a> &nbsp;/&nbsp; <a href="https://wordpress.org/support/plugin/smooth-page-scroll-updown-buttons" target="_blank">Please Report Bugs</a> &nbsp;/&nbsp; Follow on Twitter: <a href="http://www.twitter.com/senff" target="_blank">@Senff</a> &nbsp;/&nbsp; <a href="http://www.senff.com/plugins/smooth-page-scroll-up-down-buttons" target="_blank">Detailed documentation</a> &nbsp;/&nbsp; <a href="http://www.cancer.ca" target="_blank">Donate</a></p>
 
 	</div>
 

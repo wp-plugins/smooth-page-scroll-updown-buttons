@@ -4,8 +4,8 @@
 * Tags: plugin, smooth, scroll, buttons, top
 * Plugin URI: http://www.senff.com/plugins/smooth-page-scroll-up-down-buttons
 * Requires at least: 3.8
-* Tested up to: 4.0
-* Stable tag: 1.0
+* Tested up to: 4.1
+* Stable tag: 1.1
 * License: GPLv2 or later
 * License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -60,11 +60,17 @@ For any other issues, please use the [WordPress.org forum](https://wordpress.org
 
 ## Changelog
 
+### 1.1 
+* Adding additional setting for button placement: bottom center.
+
 ### 1.0 
 * Initial release.
 
 
 ## Upgrade Notice 
+
+### 1.1 
+Adding additional setting for button placement: bottom center.
 
 ### 1.0 
 Initial release of the plugin.
