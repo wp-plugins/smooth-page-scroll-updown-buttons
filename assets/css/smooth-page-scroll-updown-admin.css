@@ -31,7 +31,9 @@
 .positioning-buttons label#pos-0 {background-position:0 -45px;}
 .positioning-buttons label#pos-1 {background-position:-125px -45px;}
 .positioning-buttons label#pos-2 {background-position:-250px -45px;}
+.positioning-buttons label#pos-3 {background-position:-375px -45px;}
 
 .with-top-button label#pos-0 {background-position:0 -145px;}
 .with-top-button label#pos-1 {background-position:-125px -145px;}
 .with-top-button label#pos-2 {background-position:-250px -145px;}
+.with-top-button label#pos-3 {background-position:-375px -145px;}
