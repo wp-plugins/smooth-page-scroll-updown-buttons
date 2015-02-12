@@ -1,5 +1,5 @@
 /**
-* @preserve Smooth Page Scroll Up/Down Buttons | @senff | GPL2 Licensed
+* @preserve Smooth Scroll Page Up/Down Buttons 1.2 | @senff | GPL2 Licensed
 */
 
 (function ($) {
@@ -10,9 +10,11 @@
       // Default
       positioning: 0,
       topbutton: false,
+      distance: 100,
       speed: 1200
       }, options );
 
+    scrollDistance = parseInt(settings.distance)/100;
     scrollSpeed = parseInt(settings.speed);
 
     if (settings.topbutton) {
@@ -25,11 +27,11 @@
       checkMyButtons = setInterval(function(){showButtons()},10);
       
     $('.page-scroll-buttons').on('click','.one-page-up',function(){
-      scrollOnePageUp(scrollSpeed);
+      scrollOnePageUp(scrollDistance,scrollSpeed);
     });
 
     $('.page-scroll-buttons').on('click','.one-page-down',function(){
-      scrollOnePageDown(scrollSpeed);
+      scrollOnePageDown(scrollDistance,scrollSpeed);
     });
 
     $('.page-scroll-buttons').on('click','.all-the-way-to-top',function(){
@@ -59,32 +61,32 @@
 
   }
 
-  function scrollOnePageUp(scrollSpeed){
+  function scrollOnePageUp(scrollDistance,scrollSpeed){
     pageHeight = $(window).height();
     scrolledSoFar = $(window).scrollTop();
 
-    if (scrolledSoFar<pageHeight) {
+    if (scrolledSoFar+21<(pageHeight*scrollDistance)) {
       // We haven't scrolled a whole page yet, so let's just go to 0
       letsScroll(0,scrollSpeed);
     } else {
       // Scroll one page up
-      letsScroll(scrolledSoFar-pageHeight+20,scrollSpeed);
+      letsScroll(parseInt(scrolledSoFar-(pageHeight*scrollDistance)+20),scrollSpeed);  // scroll a little less up: 20px BELOW
     }
     
   }
 
-  function scrollOnePageDown(scrollSpeed){
+  function scrollOnePageDown(scrollDistance,scrollSpeed){
     pageHeight = $(window).height();
     docHeight = $(document).height();
     scrolledSoFar = $(window).scrollTop();
 
-    if (scrolledSoFar>(docHeight-(pageHeight*2))) {
-      // There's less than a full page left, so let's just go to the bottom 
+    if ((scrolledSoFar-19)>(docHeight-pageHeight-(pageHeight*scrollDistance))) {
+      // There's less than a scroll left, so let's just go to the bottom 
       letsScroll(docHeight-pageHeight,scrollSpeed);
       $('.page-scroll-buttons .one-page-down').addClass('not-functional');
     } else {
       // Scroll one page down
-      letsScroll(scrolledSoFar+pageHeight-20,scrollSpeed);
+      letsScroll(parseInt(scrolledSoFar+(pageHeight*scrollDistance)-20),scrollSpeed); // scroll a little less down: 20px ABOVE
       //letsScroll(docHeight-pageHeight);
     } 
   }

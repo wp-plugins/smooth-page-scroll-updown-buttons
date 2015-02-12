@@ -1,3 +1,7 @@
+/**
+* @preserve Smooth Scroll Page Up/Down Buttons 1.2 | @senff | GPL2 Licensed
+*/
+
 (function($) {
   $(document).ready(function($) {
 

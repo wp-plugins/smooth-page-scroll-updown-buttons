@@ -1,25 +1,26 @@
 <?php
 /*
-Plugin Name: Smooth Page Scroll Up/Down Buttons
+Plugin Name: Smooth Scroll Page Up/Down Buttons
 Plugin URI: http://www.senff.com/plugins/smooth-page-scroll-up-down-buttons
 Description: Adds buttons to your page that will enable the user to easily (and smoothly) scroll one screen up/down.
 Author: Mark Senff
 Author URI: http://www.senff.com
-Version: 1.1
+Version: 1.2
 */
 
-defined('ABSPATH') or die('F*ck cancer.');
+defined('ABSPATH') or die('READY PLAYER ONE');
 
 
 // === FUNCTIONS =========================================================================================================
 
 if (!function_exists('page_scroll_buttons_default_options')) {
 	function page_scroll_buttons_default_options() {
-		$versionNum = '1.1';
+		$versionNum = '1.2';
 		if (get_option('page_scroll_buttons_options') === false) {
 			$new_options['psb_version'] = $versionNum;
 			$new_options['psb_positioning'] = '0';
 			$new_options['psb_topbutton'] = '';
+			$new_options['psb_distance'] = '100';
 			$new_options['psb_speed'] = '1200';
 			add_option('page_scroll_buttons_options',$new_options);
 		} 
@@ -29,16 +30,27 @@ if (!function_exists('page_scroll_buttons_default_options')) {
 
 if (!function_exists('page_scroll_buttons_update')) {
 	function page_scroll_buttons_update() {
-		// No updates yet.
+		$versionNum = '1.2';
+		$existing_options = get_option('page_scroll_buttons_options');
+
+		if(!isset($existing_options['psb_distance'])) {
+			// Introduced in version 1.2
+			$existing_options['psb_distance'] = '100';
+		} 
+
+		$existing_options['psb_version'] = $versionNum;
+		update_option('page_scroll_buttons_options',$existing_options);
 	}
 }
+
+
 
 
 if (!function_exists('load_page_scroll_buttons')) {
     function load_page_scroll_buttons() {
 
 		// Main jQuery plugin file 
-	    wp_register_script('pageScrollButtonsLib', plugins_url('/assets/js/smooth-page-scroll-updown-buttons.js', __FILE__), array( 'jquery' ), '1.0');
+	    wp_register_script('pageScrollButtonsLib', plugins_url('/assets/js/smooth-page-scroll-updown-buttons.min.js', __FILE__), array( 'jquery' ), '1.2');
 	    wp_enqueue_script('pageScrollButtonsLib');
 
 		wp_register_style('pageScrollButtonsStyle', plugins_url('/assets/css/smooth-page-scroll-updown-buttons.css', __FILE__) );
@@ -55,6 +67,10 @@ if (!function_exists('load_page_scroll_buttons')) {
 			$options['psb_topbutton'] = '';
 		}
 
+		if (!$options['psb_distance']) {
+			$options['psb_distance'] = '100';
+		}
+
 		if (!$options['psb_speed']) {
 			$options['psb_speed'] = '1200';
 		}
@@ -62,6 +78,7 @@ if (!function_exists('load_page_scroll_buttons')) {
 		$script_vars = array(
 		      'positioning' => $options['psb_positioning'],
 		      'topbutton' => $options['psb_topbutton'],
+		      'distance' => $options['psb_distance'],
 		      'speed' => $options['psb_speed']
 		);
 
@@ -73,7 +90,7 @@ if (!function_exists('load_page_scroll_buttons')) {
 
 if (!function_exists('page_scroll_buttons_menu')) {
     function page_scroll_buttons_menu() {
-		add_options_page( 'Smooth Page Scroll Up/Down Buttons Configuration', 'Smooth Page Scroll Up/Down Buttons', 'manage_options', 'pagescrollupdownmenu', 'page_scroll_up_down_buttons_config_page' );
+		add_options_page( 'Smooth Scroll Page Up/Down Buttons Configuration', 'Smooth Scroll Page Up/Down Buttons', 'manage_options', 'pagescrollupdownmenu', 'page_scroll_up_down_buttons_config_page' );
     }
 }
 
@@ -84,7 +101,7 @@ if (!function_exists('page_scroll_up_down_buttons_config_page')) {
 	?>
 
 	<div id="page-scroll-up-down-buttons-settings-general" class="wrap">
-		<h2>Smooth Page Scroll Up/Down Buttons Settings</h2>
+		<h2>Smooth Scroll Page Up/Down Buttons Settings</h2>
 
 		<p>Adding UP/DOWN buttons will enable visitors of your site to scroll smoothly, scrolling one page at a time. Handy for pages with a lot of text/content, or wherever a browser's scrollbar is just not good enough (or not present at all, like on tablets) to go up or down exactly one page/screen.</p>
 
@@ -99,6 +116,16 @@ if (!function_exists('page_scroll_up_down_buttons_config_page')) {
 				}
 			} 
 			
+			if (($page_scroll_buttons_options['psb_distance'] < 1) || ($page_scroll_buttons_options['psb_distance'] > 100)) { 
+				// Distance is smaller than 1 or greater than 100
+				$warnings = true;
+			}
+
+			if ( (!is_numeric($page_scroll_buttons_options['psb_distance'])) && ($page_scroll_buttons_options['psb_distance'] != '')) {
+				// Distance is not empty and has bad value
+				$warnings = true;
+			}
+
 			if (($page_scroll_buttons_options['psb_speed'] < 1) || ($page_scroll_buttons_options['psb_speed'] == '')) {
 				// Speed is empty or is smaller than 1
 				$warnings = true;
@@ -113,6 +140,13 @@ if (!function_exists('page_scroll_up_down_buttons_config_page')) {
 			if ( $warnings == true ) { 
 				echo '<div id="message" class="error"><p><strong>Error! Please review the current settings:</strong></p>';
 				echo '<ul style="list-style-type:disc; margin:0 0 20px 24px;">';
+
+				if ( (!is_numeric($page_scroll_buttons_options['psb_distance'])) && ($page_scroll_buttons_options['psb_distance'] != '')) {
+					echo '<li><strong>SCROLLING DISTANCE</strong> has to be a number (do not include "%" or "px", or any other characters).</li>';
+				} elseif (($page_scroll_buttons_options['psb_distance'] < 1) || ($page_scroll_buttons_options['psb_distance'] > 100)){
+					echo '<li><strong>SCROLLING DISTANCE</strong> has to be between 1 and 100.</li>';
+				}
+ 
 
 				if ($page_scroll_buttons_options['psb_speed'] == '') {
 					echo '<li><strong>SCROLLING SPEED</strong> is required.</li>';
@@ -162,9 +196,16 @@ if (!function_exists('page_scroll_up_down_buttons_config_page')) {
 							</tr>
 
 							<tr>
+								<th scope="row">Scrolling distance <a href="#" title="How far the page scrolls when you click on a button" class="help">?</a></th>
+								<td>
+									<input type="number" min="1" max="100" id="psb_distance" name="psb_distance" value="<?php echo ( $page_scroll_buttons_options['psb_distance'] ); ?>" style="width:80px;" /> % &nbsp;&nbsp;&nbsp;(<em>100% = full page/screen, 50% = half screen, etc.</em>)
+								</td>
+							</tr>
+
+							<tr>
 								<th scope="row">Scrolling speed <a href="#" title="The speed at which the page scrolls when you click on a button (set to 1 for no visible scrolling)." class="help">?</a></th>
 								<td>
-									<input type="number" id="psb_speed" name="psb_speed" value="<?php echo ( $page_scroll_buttons_options['psb_speed'] ); ?>" style="width:80px;" /> milliseconds &nbsp;&nbsp;&nbsp;(<em>1 second = 1000 milliseconds</em>)
+									<input type="number" min="1" id="psb_speed" name="psb_speed" value="<?php echo ( $page_scroll_buttons_options['psb_speed'] ); ?>" style="width:80px;" /> milliseconds &nbsp;&nbsp;&nbsp;(<em>1 second = 1000 milliseconds</em>)
 								</td>
 							</tr>
 
@@ -181,7 +222,7 @@ if (!function_exists('page_scroll_up_down_buttons_config_page')) {
 
 		<hr />
 
-		<p><a href="http://www.senff.com/plugins/smooth-page-scroll-up-down-buttons" target="_blank">Smooth Page Scroll Up/Down Buttons</a> version 1.1 by <a href="http://www.senff.com" target="_blank">Senff</a> &nbsp;/&nbsp; <a href="https://wordpress.org/support/plugin/smooth-page-scroll-updown-buttons" target="_blank">Please Report Bugs</a> &nbsp;/&nbsp; Follow on Twitter: <a href="http://www.twitter.com/senff" target="_blank">@Senff</a> &nbsp;/&nbsp; <a href="http://www.senff.com/plugins/smooth-page-scroll-up-down-buttons" target="_blank">Detailed documentation</a> &nbsp;/&nbsp; <a href="http://www.cancer.ca" target="_blank">Donate</a></p>
+		<p><a href="http://www.senff.com/plugins/smooth-page-scroll-up-down-buttons" target="_blank">Smooth Page Scroll Up/Down Buttons</a> version 1.2 by <a href="http://www.senff.com" target="_blank">Senff</a> &nbsp;/&nbsp; <a href="https://wordpress.org/support/plugin/smooth-page-scroll-updown-buttons" target="_blank">Please Report Bugs</a> &nbsp;/&nbsp; Follow on Twitter: <a href="http://www.twitter.com/senff" target="_blank">@Senff</a> &nbsp;/&nbsp; <a href="http://www.senff.com/plugins/smooth-page-scroll-up-down-buttons" target="_blank">Detailed documentation</a> &nbsp;/&nbsp; <a href="http://www.cancer.ca" target="_blank">Donate</a></p>
 
 	</div>
 
@@ -218,6 +259,12 @@ if (!function_exists('process_page_scroll_buttons_options')) {
 			} else {
 				$options[$option_name] = false;
 			}
+		}
+
+		foreach ( array('psb_distance') as $option_name ) {
+			if ( isset( $_POST[$option_name] ) ) {
+				$options[$option_name] = sanitize_text_field( $_POST[$option_name] );
+			} 
 		}
 
 		foreach ( array('psb_speed') as $option_name ) {
